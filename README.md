@@ -1,99 +1,126 @@
+# E-commerce Product API (Django REST Framework)
 
-# E-commerce Product API
+Capstone project for the **ALX Back-End (BE)** programme.
 
-An API for managing products and categories in an e-commerce system. Built with Django and Django REST framework, this API allows for user authentication, product management, and category-based product search.
+This repository contains a Django REST Framework API for managing **products**, **categories**, **orders**, and **reviews**, with **JWT authentication**.
 
-## Table of Contents
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [API Endpoints](#api-endpoints)
-- [Authentication](#authentication)
-- [Future Enhancements](#future-enhancements)
-- [Contributing](#contributing)
-- [License](#license)
+## Project structure
+
+> The Django project lives inside the `Ecommerce_api/` directory.
+
+- `README.md` (this file)
+- `Ecommerce_api/`
+  - `manage.py`
+  - `Ecommerce_api/` (Django project settings/urls)
+  - `product/` (main app: models, serializers, views, urls)
+  - `db.sqlite3` (local dev database — you may want to remove this from Git)
 
 ## Features
-- User management (CRUD operations)
-- Product management (CRUD operations)
-- Category management with dynamic search functionality
-- Token-based authentication for user access control
 
-## Technologies Used
+- Products CRUD
+- Categories CRUD (and list products by category)
+- Orders CRUD (placing an order reduces product stock)
+- Reviews CRUD
+- Users CRUD
+- JWT authentication (access + refresh tokens)
+
+## Tech stack
+
 - Python
 - Django
 - Django REST Framework
-- SQLite (Database)
-- Deployed on PythonAnywhere
+- `djangorestframework-simplejwt` (JWT auth)
 
-## Installation
-1. Clone the repository:
-    \`\`\`bash
-    git clone https://github.com/medob6/ecommerce-product-api.git
-    \`\`\`
+## Setup (local)
 
-2. Navigate to the project directory:
-    \`\`\`bash
-    cd ecommerce-product-api
-    \`\`\`
+### 1) Clone the repo
 
-3. Create and activate a virtual environment:
-    \`\`\`bash
-    python3 -m venv env
-    source env/bin/activate
-    \`\`\`
+```bash
+git clone https://github.com/medob6/E-commerce-Product-API.git
+cd E-commerce-Product-API
+```
 
-4. Install the required dependencies:
-    \`\`\`bash
-    pip install -r requirements.txt
-    \`\`\`
+### 2) Create & activate a virtual environment
 
-5. Apply database migrations:
-    \`\`\`bash
-    python manage.py migrate
-    \`\`\`
+```bash
+python -m venv .venv
+# Linux/Mac:
+source .venv/bin/activate
+# Windows (PowerShell):
+# .venv\Scripts\Activate.ps1
+```
 
-6. Run the development server:
-    \`\`\`bash
-    python manage.py runserver
-    \`\`\`
+### 3) Install dependencies
 
-## API Endpoints
+This project should have its dependencies listed in `Ecommerce_api/requirements.txt`.
 
-### User Management
-- \`POST /api/users/\`: Create a new user.
-- \`GET /api/users/\`: Retrieve all users.
-- \`PUT /api/users/<id>/\`: Update a specific user.
-- \`DELETE /api/users/<id>/\`: Delete a user.
+```bash
+pip install -r Ecommerce_api/requirements.txt
+```
 
-### Product Management
-- \`POST /api/products/\`: Create a new product.
-- \`GET /api/products/\`: Retrieve all products.
-- \`PUT /api/products/<id>/\`: Update a specific product.
-- \`DELETE /api/products/<id>/\`: Delete a product.
+> Note: `Ecommerce_api/requirements.txt` is currently empty in the repository.
+> You should add your dependencies there (at minimum: `Django`, `djangorestframework`, `djangorestframework-simplejwt`).
 
-### Category Management
-- \`GET /api/categories/\`: Retrieve all categories.
-- \`GET /api/categories/<id>/\`: Retrieve products by category.
+### 4) Run migrations
 
-## Authentication
-The API uses token-based authentication for secure access. Users need to authenticate to perform any product or category-related actions.
+```bash
+cd Ecommerce_api
+python manage.py migrate
+```
 
-- Obtain a token:
-    \`\`\`bash
-    POST /api-token-auth/
-    \`\`\`
+### 5) Start the development server
 
-- Include the token in the header for authorized requests:
-    \`\`\`bash
-    Authorization: Token <your_token>
-    \`\`\`
+```bash
+python manage.py runserver
+```
 
-## Future Enhancements
-- Product reviews and ratings
-- Stock management
-- Discount and promotion features
-- Support for multiple product images
+The API will be available at:
+
+- `http://127.0.0.1:8000/api/`
+
+## Authentication (JWT)
+
+JWT endpoints (from `product/urls.py`):
+
+- `POST /api/token/` – obtain access + refresh tokens
+- `POST /api/token/refresh/` – refresh an access token
+
+Example:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username":"YOUR_USERNAME","password":"YOUR_PASSWORD"}'
+```
+
+Use the access token:
+
+```http
+Authorization: Bearer <access_token>
+```
+
+## API endpoints
+
+All endpoints are under the `/api/` prefix (see `Ecommerce_api/Ecommerce_api/urls.py`).
+
+The router registers these resources (see `Ecommerce_api/product/urls.py`):
+
+- `/api/products/`
+- `/api/users/`
+- `/api/orders/`
+- `/api/reviews/`
+- `/api/categorys/` (typo in route name in code: `categorys`)
+
+## Notes / improvements
+
+- Consider renaming the `categorys` route to `categories` in `Ecommerce_api/product/urls.py`.
+- Remove `Ecommerce_api/db.sqlite3` from the repository and add it to `.gitignore`.
+- Fill `Ecommerce_api/requirements.txt` with the required packages.
 
 ## Contributing
-Contributions are welcome! Please submit a pull request or open an issue to discuss potential changes or improvements.
+
+Contributions are welcome — open an issue or submit a pull request.
+
+## License
+
+No license is currently specified. Add a `LICENSE` file if you want to open-source this project under a specific license.
